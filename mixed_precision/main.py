@@ -23,6 +23,8 @@ parser.add_argument('--mp', action='store_true', help='use mixed precision')
     
 args = parser.parse_args()
 
+torch.backends.cudnn.deterministic = False
+
 device = 'cuda' if torch.cuda.is_available() else 'cpu'
 best_acc = 0  # best test accuracy
 start_epoch = 0  # start from epoch 0 or last checkpoint epoch
@@ -60,9 +62,9 @@ print('==> Building model..')
 # net = ResNet18()
 net = ResNet50()
 net = net.to(device)
-if device == 'cuda':
-    net = torch.nn.DataParallel(net)
-    cudnn.benchmark = True
+#if device == 'cuda':
+#    net = torch.nn.DataParallel(net)
+#    cudnn.benchmark = True
 
 
 criterion = nn.CrossEntropyLoss()
@@ -142,7 +144,7 @@ def test(epoch):
         best_acc = acc
 
 
-for epoch in range(start_epoch, start_epoch+10):
+for epoch in range(start_epoch, start_epoch+5):
     start = time.time()
     train(epoch)
     end = time.time()
